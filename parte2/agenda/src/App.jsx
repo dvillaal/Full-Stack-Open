@@ -20,11 +20,9 @@ const App = () => {
       })
   }, [])
 
-  console.log(persons[0])
-
   let personsToShow = []
 
-  if (filterName === ''){
+  if (filterName === ""){
     personsToShow = persons
   } else {
     personsToShow = persons.filter((person) => person.name.toLowerCase().includes(filterName.toLowerCase()))
@@ -65,6 +63,7 @@ const App = () => {
         name: newName,
         number: newNumber
       }
+
       personService
         .create(personObject)
         .then(returnedPerson => {
@@ -77,6 +76,15 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .catch(error => {
+          console.log(error.response.data.error)
+          setClassNotification('error-notification')
+          setMessageNotification(`${error.response.data.error}`)
+          setTimeout(() => {
+            setMessageNotification(null)
+          }, 5000)
+        })
+
     } else {
       if (preventPerson.number === newNumber){
         alert(`${newName} is already aded to phonebook`)
@@ -100,12 +108,20 @@ const App = () => {
   }
 
   const deletePerson = (person) => {
-    if (window.confirm(`Delete ${person.name} ?`)){
-      personService
-        .eliminate(person.id)
-      setPersons(persons.filter(p => p.id !== person.id))
-    }
+    console.log(person.id)
+    console.log(persons)
+    personService
+      .eliminate(person.id)
+
+    const updatePersons = persons.filter(p => {
+      console.log(p.id.toString())
+      return p.id.toString() !== person.id.toString()})
+    
+    console.log(updatePersons)
+    setPersons(updatePersons)
+    console.log(persons)
   }
+
 
   return (
     <div>
@@ -122,7 +138,7 @@ const App = () => {
       <h3>Numbers</h3>
 
       <ul>
-        {personsToShow.map((person, i) => <Persons key={i} person={person} deletePerson={() => deletePerson(person)}/>)}
+        {personsToShow.map((person, i) => <Persons key={i} person={person} deletePerson={deletePerson}/>)}
       </ul>
 
     </div>
