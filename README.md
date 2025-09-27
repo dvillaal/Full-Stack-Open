@@ -30,5 +30,3 @@ Algunas de las tecnologías y herramientas que verás presentes:
 - Pruebas unitarias y de integración en backend y frontend
 - Manejo de estado avanzado, redux, react query
 - Buenas prácticas de diseño de API y arquitectura
-
----
